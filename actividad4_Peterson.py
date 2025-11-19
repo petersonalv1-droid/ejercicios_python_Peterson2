@@ -1,6 +1,17 @@
 import csv
 from collections import defaultdict
 fichero = "la-liga-2025-UTC.csv"
+def cargar_Resultados(ruta_csv: str) -> list:
+    partidos = []
+    print("Carga el fichero:", ruta_csv)
+    with open(ruta_csv, newline='', encoding="utf-8") as f:
+        lector = csv.DictReader(f)
+        i = 0
+        for fila in lector:
+            i += 1
+            partidos.append(fila)
+    print("Partidos cargados:", i)
+    return partidos
 def procesar_estadisticas(partidos):
     equipos = defaultdict(lambda: {
         "GF": 0, "GC": 0,
@@ -46,7 +57,6 @@ def comparar(e1, e2, equipos):
     if equipos[e1]["GF"] != equipos[e2]["GF"]:
         return equipos[e2]["GF"] - equipos[e1]["GF"]
     return equipos[e1]["FairPlay"] - equipos[e2]["FairPlay"]
-
 def mostrar_clasificacion(equipos):
     from functools import cmp_to_key
     lista = list(equipos.keys())
@@ -56,3 +66,20 @@ def mostrar_clasificacion(equipos):
     for pos, equipo in enumerate(lista, 1):
         e = equipos[equipo]
         print(f"{pos}. {equipo} - {e['Puntos']} pts | DG: {e['DG']} | GF: {e['GF']} | FP: {e['FairPlay']}")
+
+def imprimir_goles(equipos):
+    print("\n=== GOLES A FAVOR POR EQUIPO ===")
+    for k, v in equipos.items():
+        print(f"{k}: {v['GF']} goles")
+
+
+def main():
+    partidos = cargar_Resultados(fichero)
+    equipos = procesar_estadisticas(partidos)
+
+    imprimir_goles(equipos)
+    mostrar_clasificacion(equipos)
+
+
+if __name__ == "__main__":
+    main()
