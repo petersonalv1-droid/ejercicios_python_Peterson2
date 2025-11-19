@@ -4,4 +4,6 @@ pi = 0
 for k in range(num_iter):
     pi += ((-1)**k) / (2*k + 1)
 
+pi *= 4
+print("Aproximación de PI:", pi)
 
