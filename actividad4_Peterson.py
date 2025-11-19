@@ -35,3 +35,24 @@ def procesar_estadisticas(partidos):
         equipos[away]["Directos"][home]["GF"] += ga
         equipos[away]["Directos"][home]["GC"] += gh
     return equipos
+def comparar(e1, e2, equipos):
+    if e2 in equipos[e1]["Directos"]:
+        dg1 = equipos[e1]["Directos"][e2]["GF"] - equipos[e1]["Directos"][e2]["GC"]
+        dg2 = equipos[e2]["Directos"][e1]["GF"] - equipos[e2]["Directos"][e1]["GC"]
+        if dg1 != dg2:
+            return dg2 - dg1
+    if equipos[e1]["DG"] != equipos[e2]["DG"]:
+        return equipos[e2]["DG"] - equipos[e1]["DG"]
+    if equipos[e1]["GF"] != equipos[e2]["GF"]:
+        return equipos[e2]["GF"] - equipos[e1]["GF"]
+    return equipos[e1]["FairPlay"] - equipos[e2]["FairPlay"]
+
+def mostrar_clasificacion(equipos):
+    from functools import cmp_to_key
+    lista = list(equipos.keys())
+    lista.sort(key=lambda e: -equipos[e]["Puntos"])
+    lista.sort(key=cmp_to_key(lambda a, b: comparar(a, b, equipos)))
+    print("\n_-_-_CLASIFICACION FINAL_-_-_")
+    for pos, equipo in enumerate(lista, 1):
+        e = equipos[equipo]
+        print(f"{pos}. {equipo} - {e['Puntos']} pts | DG: {e['DG']} | GF: {e['GF']} | FP: {e['FairPlay']}")
