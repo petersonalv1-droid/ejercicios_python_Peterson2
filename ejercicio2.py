@@ -10,4 +10,6 @@ try:
 
     print("El doble factorial es:", resultado)
 
+except ValueError as er:
+    print("Error:", er)
     
